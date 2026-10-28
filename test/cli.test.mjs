@@ -131,6 +131,7 @@ test('copied package runs outside checkout and protects its root even without gi
   const dir = await temp(t);
   const installed = path.join(dir, 'installed-package');
   await cp(path.join(root, 'scripts'), path.join(installed, 'scripts'), { recursive: true });
+  await cp(path.join(root, 'package.json'), path.join(installed, 'package.json'));
   const entry = path.join(installed, 'scripts', 'aiwp-migrate.mjs');
   const out = path.join(dir, 'bundle.json');
   assert.equal(run(['build', '--export', fixture, '--out', out], dir, entry).status, 0);

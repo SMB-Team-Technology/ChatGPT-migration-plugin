@@ -1,6 +1,6 @@
 # Installed ChatGPT Work smoke test
 
-This is a **manual test protocol**, not a record of a completed runtime test. Use only synthetic data until these checks pass. The terminal test suite and `doctor` do not establish plugin discovery, ChatGPT permissions, or production AIWP support.
+This is a **manual test protocol**. Current results and remaining gaps are recorded in [CHECKPOINT.md](CHECKPOINT.md). Use only synthetic data until these checks pass. The terminal test suite and `doctor` do not establish plugin discovery, ChatGPT permissions, or production AIWP support.
 
 ## Before the test
 
@@ -50,7 +50,7 @@ Missing local execution, missing helper resources, an inaccessible output, unava
 
 The final rehearsal report should distinguish **package discovery**, **helper execution**, **file correctness**, **account export coverage**, and **AIWP import**. Only mark what was actually exercised.
 
-## Checkbox questionnaire acceptance (0.1.2)
+## Checkbox questionnaire acceptance
 
 In a fresh local Work chat, select the installed migration skill without a written prompt. Confirm a form with six visible checkboxes, Select all, Clear, and Continue appears. Initially nothing is checked and Continue is disabled. Select Chats and Scheduled tasks; verify both remain checked, Continue sends exactly `conversations,scheduledTasks`, and the next question asks where ChatGPT is used without asking categories again. In separate fresh chats test Select all, Clear, and a single category. Confirm no source file is read on selection. Confirm keyboard focus, checkbox toggling, narrow-window layout, and light/dark appearance.
 

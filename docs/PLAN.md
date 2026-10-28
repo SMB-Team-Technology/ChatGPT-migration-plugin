@@ -1,14 +1,14 @@
 # Implementation and release plan
 
-## Current milestone: local converter and package
+## Current milestone: plugin validation and usability
 
 The source was copied from Claude migration plugin v0.7.0 at `79158a0ded70f654468dc0c68b5a110bb534b788`. Preserve its familiar collect/report/select/build flow while replacing source-specific collectors.
 
-This milestone includes the portable package, deterministic local converter, exact staging inputs, graph-aware conversation contract, strict validation, safe selection reports, and synthetic tests. It does not include installed ChatGPT verification or an AIWP server implementation. Use [runtime-test.md](runtime-test.md) for the next installation check.
+This milestone includes the portable package, deterministic local converter, exact staging inputs, graph-aware conversation contract, strict validation, safe selection reports, and synthetic tests. A desktop sample run has been reported; full installed-runtime acceptance and an AIWP server implementation remain unfinished. See [CHECKPOINT.md](CHECKPOINT.md) for current evidence.
 
 ## Execution order agreed on 2026-10-28
 
-The local converter/package milestone has passed review. Proceed with the ChatGPT desktop synthetic smoke test first. The ChatGPT web version remains an explicit backlog requirement; desktop testing does not satisfy it.
+The local converter/package milestone has passed review. Complete the remaining desktop questionnaire and real-export checks first. AIWP changes are deferred at the maintainer's request. The ChatGPT web version remains an explicit backlog requirement; desktop testing does not satisfy it.
 
 ## Backlog: ChatGPT web migration experience
 
@@ -27,6 +27,13 @@ Acceptance criteria:
 - AIWP preview/import is presented as available only after matching destination support is implemented and tested.
 
 This task is separate from the pending AIWP importer and does not require reopening the accepted local converter review unless code or behavior changes.
+
+## Remaining plugin usability work
+
+- Confirm all six checkboxes, exact selection submission, retries, and fresh-session behavior in the installed host.
+- Provide guided exact collection or clear unsupported messaging for non-chat categories; do not expect clients to author canonical JSON themselves.
+- Refine the final included/skipped/manual-transfer summary and accessible output link.
+- Test private repo installation, Node availability, updates, and output access on a teammate's Mac.
 
 ## Source validation
 
@@ -62,13 +69,13 @@ New backend behavior belongs in TypeScript under AIWP's packages/api. Follow tha
 
 Deploy additive backend support to both blue-green instances before enabling dependent UI or releasing the plugin. Capability checks alone do not guarantee the next request reaches an upgraded instance. Pin the plugin to a tested revision and document the minimum supported AIWP version.
 
-Proposed ownership: private `SMB-Team-Technology/ChatGPT-migration-plugin` during pilot, with existing organization teams receiving appropriate read/write/maintain access. Use reviewed PRs and checks. This local build does not create or configure that repository.
+The pilot repository is `SMB-Team-Technology/ChatGPT-migration-plugin`. Verify appropriate team read/write/maintain access before rollout; do not infer organization-wide access from one successful installation. Use reviewed PRs and checks.
 
 Internal workspace import and external client installation are different checks. Workspace admins can import a GitHub marketplace subject to source access and actual workspace controls. A private team plugin is not automatically available to outside clients. Test supervised local installation or pursue approved directory publication separately; do not publish merely to bypass access setup.
 
 ## Known evidence gaps
 
-- ChatGPT Work execution of the installed package has not yet been demonstrated.
+- A desktop synthetic run has been reported; full checkbox-to-collection acceptance and a second-machine installation remain pending.
 - Fresh current export coverage beyond known conversation shapes remains unverified.
 - AIWP does not yet implement this proposed graph bundle or its recovery behavior.
 - Live AIWP PR overlap could not be checked during research because connector access failed; local code review does not prove there is no overlapping work.

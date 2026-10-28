@@ -2,7 +2,7 @@
 
 Prepare selected ChatGPT data for a future **AI Workforce Pro (AIWP)** importer. The workflow follows the Claude migration plugin: choose categories, collect exact inputs, review coverage, select items, and build one bundle.
 
-**This is a local development pilot. The inspected AIWP importer accepts Claude bundles; support for this ChatGPT format has not been implemented or verified in this milestone. Do not upload a generated bundle to production or relabel it as a Claude bundle.** Package discovery and helper execution inside ChatGPT Work remain unverified until the [runtime smoke test](docs/runtime-test.md) is completed. A successful CLI run is not that test.
+**This is a local development pilot. The inspected AIWP importer accepts Claude bundles; support for this ChatGPT format has not been implemented or verified in this milestone. Do not upload a generated bundle to production or relabel it as a Claude bundle.** A desktop sample run has been reported; full questionnaire acceptance and real-export compatibility remain pending. See the [current checkpoint](docs/CHECKPOINT.md) for evidence and the [runtime protocol](docs/runtime-test.md) for remaining checks.
 
 ## What is implemented
 
@@ -19,7 +19,7 @@ There is no account-wide harvesting, hosted service, automatic browser download,
 Requires Node 20 or newer. There are no npm dependencies to install.
 
 ```sh
-cd /path/to/ChatGPT-migration-plugin
+cd ChatGPT-migration-plugin
 npm test
 node scripts/aiwp-migrate.mjs doctor
 node scripts/aiwp-migrate.mjs scan --export test/fixtures/chatgpt-synthetic.json --categories conversations
@@ -76,17 +76,33 @@ Current account export coverage outside conversations is not established. Local 
 
 The proposed target is **ChatGPT desktop → Work with permitted local execution**, not ordinary Chat mode. A directory listing alone does not establish the execution and file access the helper needs.
 
-This repository includes `.agents/plugins/marketplace.json`; its `./` source is relative to the repository root. Where the current CLI is available, register this local source with:
+For the team repository, add this source in the Plugins Directory marketplace dialog:
+
+- Source: `https://github.com/SMB-Team-Technology/ChatGPT-migration-plugin.git`
+- Git ref: `main`
+- Sparse paths: leave blank
+
+Repository access is required. Alternatively, register it from Terminal:
 
 ```sh
-codex plugin marketplace add /path/to/ChatGPT-migration-plugin
+codex plugin marketplace add https://github.com/SMB-Team-Technology/ChatGPT-migration-plugin.git
 ```
 
-Then restart ChatGPT desktop, find **SMB ChatGPT migration pilot** in the Plugins Directory, install it, and start a new Work chat. Select the installed migration skill and run the [synthetic runtime test](docs/runtime-test.md). Registration changes local plugin configuration; it is a manual test step, not something this build performs.
+For local development, run `codex plugin marketplace add "$PWD"` from this repository's root. The catalog at `.agents/plugins/marketplace.json` points to `./`, relative to that root.
 
-Installed packages may be cached. After source changes, refresh the marketplace and confirm the installed version and helper behavior. Stop if the surface does not expose local package resources or shell access.
+Restart ChatGPT desktop, choose **SMB ChatGPT migration pilot**, install the plugin, and open a fresh local Work chat. Selecting the migration skill starts onboarding without a custom prompt. Use **Try the sample first** for a rehearsal. The developer test prompt and expected results are in [runtime-test.md](docs/runtime-test.md).
 
-Team workspace import and external-client distribution are separate release checks. No remote repository, workspace installation, or public plugin submission is created by this local build.
+For a Git-backed marketplace, refresh with:
+
+```sh
+codex plugin marketplace upgrade smb-chatgpt-migration-pilot
+```
+
+Then update/reinstall the plugin and start a fresh chat. This upgrade command does **not** apply to a marketplace registered as a local folder. For a local source, update the checkout and reinstall from that local marketplace. Check the installed version against root `plugin.json`; the host runs a cached copy, not necessarily your working tree.
+
+If `choose_migration_categories` is missing, check the installed version, whether the local MCP process is available, and root `mcp.json`. That file must declare its schema. A successful helper `doctor` does not verify MCP discovery or widget rendering. Do not repeatedly reinstall without checking the failure.
+
+Team workspace distribution and external-client installation need separate verification. Access to this private repository does not grant access to every client.
 
 ## Development and release scope
 
@@ -101,12 +117,31 @@ Documentation consulted on 2026-10-28:
 - [ChatGPT Work execution boundaries](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-overview)
 - [Workspace import and sync](https://learn.chatgpt.com/docs/enterprise/plugin-management)
 
-## Category questionnaire (0.1.2)
+## Category questionnaire
 
 Selecting the migration skill calls `choose_migration_categories` from the packaged `migration-questionnaire` MCP server. Root `mcp.json` launches Node with `${PLUGIN_ROOT}`; no dependency installation, API key, listening port, or remote server is required. The form shows all six categories independently with Select all, Clear, and Continue. Nothing is selected initially. Continue validates a nonempty category list and sends the chosen IDs back to the chat for the remaining questions. The form never reads exports or starts collection.
 
 The server has only two questionnaire tools and one fixed UI resource; it keeps no cross-chat selection state. The UI uses the MCP Apps bridge, with timeouts and retryable errors. Real ChatGPT rendering and continuation still require the installed runtime check; SDK interoperability and simulated host tests are not a substitute. If the tool is missing, onboarding reports that limitation rather than reverting to the rejected single-choice category menu.
 
-For Git marketplace installs, refresh the marketplace, update/reinstall the plugin, and open a fresh local Work chat. Confirm both the version (0.1.2) and questionnaire tool discovery. This does not implement the backlogged web deployment.
+For Git marketplace installs, refresh the marketplace, update/reinstall the plugin, and open a fresh local Work chat. Confirm the installed version matches root `plugin.json` and that the questionnaire tools are available. This does not implement the backlogged web deployment.
 
 Implementation references: [MCP Apps UI](https://developers.openai.com/plugins/build/chatgpt-ui), [local MCP packaging](https://developers.openai.com/plugins/deploy/desktop-only), and [MCP stdio transport](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports).
+
+## Code and documentation map
+
+| Location | Responsibility |
+|---|---|
+| `scripts/aiwp-migrate.mjs` | CLI commands and output path protection |
+| `scripts/lib/sources/` | Export and exact-staging adapters |
+| `scripts/lib/bundle.mjs` | Coverage, item selection, and bundle construction |
+| `scripts/lib/validate.mjs` | Canonical category and bundle validation |
+| `scripts/lib/zip.mjs`, `secrets.mjs`, `output.mjs` | Archive, credential, and publication safeguards |
+| `scripts/lib/metadata.mjs` | Runtime identity from package.json |
+| `scripts/questionnaire-server.mjs`, `ui/categories.html` | Local MCP tools and embedded category form |
+| `skills/migrate/SKILL.md` | Guided workflow instructions |
+| `test/` | Synthetic tests; no customer exports |
+| [Bundle contract](docs/bundle-format.md) | Schema, staging examples, limits |
+| [Checkpoint](docs/CHECKPOINT.md) / [review history](docs/review-history.md) | Current evidence / historical reviews |
+| [Plan](docs/PLAN.md) | Remaining plugin work, web backlog, future AIWP integration |
+
+Before shipping a changed package, keep `package.json` and `plugin.json` versions aligned, run `npm test`, and complete the relevant installed-runtime checks. Runtime version reporting follows `package.json`. Keep private exports outside this repository.

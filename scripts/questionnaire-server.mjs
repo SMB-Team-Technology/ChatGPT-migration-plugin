@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 // Small, bounded MCP stdio surface: no network, user-file access, or persisted state.
 import { readFile } from 'node:fs/promises';
-import { GENERATOR, CATEGORIES } from './lib/bundle.mjs';
+import { GENERATOR } from './lib/metadata.mjs';
+import { CATEGORIES } from './lib/validate.mjs';
 const uri = 'ui://chatgpt-migration/categories.html';
 const mimeType = 'text/html;profile=mcp-app';
-const html = await readFile(
+const html = (await readFile(
   new URL('../ui/categories.html', import.meta.url),
   'utf8',
-);
+)).replaceAll('__PLUGIN_VERSION__', GENERATOR.version);
 const choices = [
   [
     'projects',

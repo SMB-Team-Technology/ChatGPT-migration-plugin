@@ -73,6 +73,10 @@ test('installed server discovers checkbox resource from unrelated cwd and starts
     },
   ]);
   assert.equal(replies[0].result.protocolVersion, '2025-11-25');
+  const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+  const manifest = JSON.parse(await readFile(new URL('../plugin.json', import.meta.url), 'utf8'));
+  assert.equal(manifest.version, pkg.version);
+  assert.equal(replies[0].result.serverInfo.version, pkg.version);
   assert.equal(
     replies[1].result.tools[0]._meta.ui.resourceUri,
     'ui://chatgpt-migration/categories.html',
@@ -84,6 +88,8 @@ test('installed server discovers checkbox resource from unrelated cwd and starts
     categories,
   );
   const resource = replies[3].result.contents[0];
+  assert.ok(resource.text.includes(`version: '${pkg.version}'`));
+  assert.ok(!resource.text.includes('__PLUGIN_VERSION__'));
   assert.equal(resource.mimeType, 'text/html;profile=mcp-app');
   assert.equal((resource.text.match(/type="checkbox"/g) || []).length, 6);
 });

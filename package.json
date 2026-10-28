@@ -1,6 +1,6 @@
 {
   "name": "chatgpt-migration-plugin",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "type": "module",
   "description": "Local ChatGPT migration pilot: explicit exports, coverage reports and graph-preserving bundles",

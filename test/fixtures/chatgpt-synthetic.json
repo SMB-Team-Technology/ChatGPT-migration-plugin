@@ -1,0 +1,18 @@
+[
+  {
+    "id": "synthetic-chat",
+    "conversation_id": "synthetic-chat",
+    "title": "Synthetic branching conversation",
+    "create_time": 1700000000,
+    "update_time": 1700000060,
+    "current_node": "answer-b",
+    "mapping": {
+      "root": { "id": "root", "parent": null, "children": ["system"], "message": null },
+      "system": { "parent": "root", "children": ["question"], "message": { "author": {"role":"system"}, "content": {"content_type":"text", "parts":["Synthetic system instruction"]} } },
+      "question": { "parent": "system", "children": ["answer-a","tool"], "message": {"author":{"role":"user"}, "create_time":1700000001, "content":{"content_type":"text","parts":["Hello 世界 — keep https://example.com"]}} },
+      "answer-a": { "parent": "question", "children": [], "message": {"author":{"role":"assistant"}, "content":{"content_type":"code","text":"console.log('A');","language":"javascript"}} },
+      "tool": { "parent": "question", "children": ["answer-b"], "message": {"author":{"role":"tool"}, "content":{"content_type":"text","parts":["Tool output not a user-facing answer"]}} },
+      "answer-b": { "parent": "tool", "children": [], "message": {"author":{"role":"assistant"}, "content":{"content_type":"text","parts":["Alternative B"]}} }
+    }
+  }
+]

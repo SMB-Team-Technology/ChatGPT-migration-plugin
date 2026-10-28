@@ -1,0 +1,7 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "chatgpt-migration",
+  "version": "0.1.1",
+  "description": "Pilot: prepare selected ChatGPT exports and exact staged data for a future AI Workforce Pro importer.",
+  "license": "MIT"
+}

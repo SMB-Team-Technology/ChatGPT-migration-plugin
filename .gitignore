@@ -1,0 +1,12 @@
+node_modules/
+.DS_Store
+coverage/
+*.log
+.env
+.env.*
+inputs/
+outputs/
+exports/
+aiwp-migration-bundle*.json
+aiwp-chatgpt-bundle*.json
+*.zip

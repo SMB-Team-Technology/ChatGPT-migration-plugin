@@ -1,0 +1,15 @@
+{
+  "name": "smb-chatgpt-migration-pilot",
+  "interface": {
+    "displayName": "SMB ChatGPT migration pilot"
+  },
+  "plugins": [
+    {
+      "name": "chatgpt-migration",
+      "source": {
+        "source": "local",
+        "path": "./"
+      }
+    }
+  ]
+}

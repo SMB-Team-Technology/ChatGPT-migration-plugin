@@ -1,6 +1,6 @@
 # Local review checkpoint — 2026-10-28
 
-Version: 0.1.2 (embedded category form; earlier converter review covered 0.1.0). The initial reviews covered an uncommitted local Git repository on `main`. The accepted source is now being committed for private repository publication; no remote publication has been verified. Review the full source tree rather than relying on an empty working-tree diff.
+Version: 0.1.3 (portable MCP manifest correction; earlier converter review covered 0.1.0). The initial reviews covered an uncommitted local Git repository on `main`. The accepted source is now being committed for private repository publication; no remote publication has been verified. Review the full source tree rather than relying on an empty working-tree diff.
 
 ## Implemented
 
@@ -80,3 +80,7 @@ Replaced the single-choice category fallback with an MCP Apps checkbox form. Add
 Validation: seven new tests cover all 63 nonempty subsets, invalid/duplicate input, no initial selection, all/clear/subset UI behavior, validation/message failure retention, unknown tools/resources, and protocol initialization. The existing SDK 1.29.0 client successfully initialized, discovered both tools, confirmed a subset, and read the UI resource from an unrelated working directory. UI event tests use a simulated DOM/host. Browser rendering could not be exercised: the bundled test browser was absent and the installed browser could not launch in this session. Native ChatGPT rendering, permissions, and automatic continuation remain pending the runtime acceptance check. No personal export or destination import was used.
 
 Full suite after the 0.1.2 implementation: **75 passed, 0 failed** on Node 24.22.1. The seven questionnaire tests also pass after formatting.
+
+## Installed discovery failure — 0.1.3
+
+The user reported that the 0.1.2 skill and helper loaded but `choose_migration_categories` was unavailable. The installed source matches the repository; plugin settings report installed/enabled. Found and corrected a concrete packaging defect: root `mcp.json` omitted the mandatory `$schema` property required by the Agent Plugins 1.0.0 MCP schema. Added regression coverage that checks that declaration and launches the server through the actual configured command/arguments/cwd, then discovers the questionnaire tool. This proves local configuration execution, not the host's plugin-loader behavior. Installed ChatGPT tool discovery and embedded UI rendering must still be verified; no log evidence establishes that this omission was the sole cause.

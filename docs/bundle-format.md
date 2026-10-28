@@ -11,7 +11,7 @@ The validator in `scripts/lib/validate.mjs` is the local authority. Unknown fiel
   "format": "chatgpt-migration-bundle",
   "version": 1,
   "createdAt": "2026-10-28T12:00:00.000Z",
-  "generator": { "name": "chatgpt-migration-plugin", "version": "0.1.2" },
+  "generator": { "name": "chatgpt-migration-plugin", "version": "0.1.3" },
   "migrationWarnings": ["Destination import has not been verified."],
   "conversations": [
     {

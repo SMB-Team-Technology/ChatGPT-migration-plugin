@@ -5,7 +5,7 @@ import { findSecret, findSecretIn } from './secrets.mjs';
 import { BUNDLE_FORMAT, BUNDLE_VERSION, CATEGORIES, validateItems, validateBundle } from './validate.mjs';
 
 export { CATEGORIES, validateBundle };
-export const GENERATOR = { name: 'chatgpt-migration-plugin', version: '0.1.2' };
+export const GENERATOR = { name: 'chatgpt-migration-plugin', version: '0.1.3' };
 const empty = () => Object.fromEntries(CATEGORIES.map((category) => [category, []]));
 const canonical = (value) => Array.isArray(value) ? value.map(canonical)
   : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonical(value[key])])) : value;

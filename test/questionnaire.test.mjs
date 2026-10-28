@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 const server = fileURLToPath(
   new URL('../scripts/questionnaire-server.mjs', import.meta.url),
@@ -13,9 +14,9 @@ const categories = [
   'scheduledTasks',
   'artifacts',
 ];
-async function exchange(requests) {
-  const child = spawn(process.execPath, [server], {
-    cwd: '/private/tmp',
+async function exchange(requests, launch = { command: process.execPath, args: [server], cwd: '/private/tmp' }) {
+  const child = spawn(launch.command, launch.args, {
+    cwd: launch.cwd,
     stdio: ['pipe', 'pipe', 'pipe'],
   });
   let stdout = '',
@@ -143,4 +144,17 @@ test('rejects arbitrary resource reads, unknown tools, and uninitialized calls',
   assert.equal(replies[2].error.code, -32602);
   assert.equal(replies[3].error.code, -32602);
   assert.equal(replies[4].error.code, -32700);
+});
+
+test('portable MCP configuration declares its required schema and launches discoverable tools', async () => {
+  const root = fileURLToPath(new URL('../', import.meta.url)).replace(/\/$/, '');
+  const config = JSON.parse(await readFile(new URL('../mcp.json', import.meta.url), 'utf8'));
+  assert.equal(config.$schema, 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json');
+  const entry = config.mcpServers['migration-questionnaire'];
+  assert.equal(entry.type, 'stdio');
+  const resolve = value => value.replaceAll('${PLUGIN_ROOT}', root);
+  const replies = await exchange([...init, { jsonrpc: '2.0', id: 1, method: 'tools/list' }], {
+    command: entry.command, args: entry.args.map(resolve), cwd: resolve(entry.cwd),
+  });
+  assert.ok(replies[1].result.tools.some(tool => tool.name === 'choose_migration_categories'));
 });

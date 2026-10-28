@@ -1,9 +1,12 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
     "migration-questionnaire": {
       "type": "stdio",
       "command": "node",
-      "args": ["${PLUGIN_ROOT}/scripts/questionnaire-server.mjs"],
+      "args": [
+        "${PLUGIN_ROOT}/scripts/questionnaire-server.mjs"
+      ],
       "cwd": "${PLUGIN_ROOT}"
     }
   }

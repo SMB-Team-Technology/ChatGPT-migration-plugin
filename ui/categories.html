@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Choose migration categories</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        color: light-dark(#202124, #eee);
+        background: light-dark(#fff, #242424);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+      }
+      main {
+        max-width: 650px;
+        margin: auto;
+      }
+      h1 {
+        font-size: 20px;
+        line-height: 1.35;
+        margin: 0 0 8px;
+      }
+      p {
+        font-size: 14px;
+        line-height: 1.5;
+        color: light-dark(#555, #bbb);
+      }
+      fieldset {
+        border: 0;
+        padding: 0;
+        margin: 16px 0;
+      }
+      legend {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+      label {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        border: 1px solid light-dark(#ddd, #484848);
+        border-radius: 10px;
+        padding: 13px;
+        margin: 8px 0;
+        cursor: pointer;
+      }
+      label:has(input:checked) {
+        border-color: light-dark(#2463c4, #91baff);
+        background: light-dark(#f1f6ff, #293545);
+      }
+      input {
+        width: 18px;
+        height: 18px;
+        margin: 3px 0;
+        accent-color: #377de1;
+        flex-shrink: 0;
+      }
+      strong {
+        display: block;
+        font-size: 15px;
+      }
+      small {
+        display: block;
+        font-size: 12px;
+        line-height: 1.5;
+        color: light-dark(#555, #bbb);
+        margin-top: 3px;
+      }
+      .actions,
+      footer {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      button {
+        font: inherit;
+        font-size: 14px;
+        cursor: pointer;
+        border: 1px solid light-dark(#ccc, #555);
+        border-radius: 8px;
+        padding: 9px 14px;
+        background: transparent;
+        color: inherit;
+      }
+      button:focus-visible,
+      input:focus-visible {
+        outline: 3px solid #75aaff;
+        outline-offset: 3px;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+      #continue {
+        background: light-dark(#222, #eee);
+        color: light-dark(#fff, #222);
+        margin-left: auto;
+        border: 0;
+      }
+      #status {
+        min-height: 21px;
+        font-size: 13px;
+      }
+      #count {
+        font-size: 13px;
+      }
+      .note {
+        font-size: 12px;
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>What would you like to migrate?</h1>
+      <p>
+        Select one or more kinds of ChatGPT data to prepare for AI Workforce
+        Pro.
+      </p>
+      <form id="form">
+        <div class="actions">
+          <button type="button" id="all">Select all</button
+          ><button type="button" id="clear">Clear</button>
+        </div>
+        <fieldset id="choices">
+          <legend>Migration categories</legend>
+          <label
+            ><input type="checkbox" value="projects" /><span
+              ><strong>Projects</strong
+              ><small
+                >Instructions and text context you supply; original files
+                handled separately.</small
+              ></span
+            ></label
+          >
+          <label
+            ><input type="checkbox" value="conversations" /><span
+              ><strong>Chats</strong
+              ><small
+                >Supported conversation text and branches from your
+                export.</small
+              ></span
+            ></label
+          >
+          <label
+            ><input type="checkbox" value="memories" /><span
+              ><strong>Memories</strong
+              ><small>Exact saved memories you supply.</small></span
+            ></label
+          >
+          <label
+            ><input type="checkbox" value="skills" /><span
+              ><strong>Skills</strong
+              ><small
+                >Authorized instructions and supporting text resources you
+                supply.</small
+              ></span
+            ></label
+          >
+          <label
+            ><input type="checkbox" value="scheduledTasks" /><span
+              ><strong>Scheduled tasks</strong
+              ><small
+                >Exact prompts and schedules you supply; tasks remain
+                paused.</small
+              ></span
+            ></label
+          >
+          <label
+            ><input type="checkbox" value="artifacts" /><span
+              ><strong>Artifacts</strong
+              ><small
+                >Actual document or Canvas content you supply, not just
+                links.</small
+              ></span
+            ></label
+          >
+        </fieldset>
+        <footer>
+          <span id="count" aria-live="polite">0 of 6 selected</span
+          ><button id="continue" type="submit" disabled>Continue</button>
+        </footer>
+        <p id="status" role="status" aria-live="polite">
+          Connecting to ChatGPT…
+        </p>
+        <p class="note">
+          This prepares a local bundle. AI Workforce Pro import support is still
+          pending.
+        </p>
+      </form>
+    </main>
+    <script>
+      (() => {
+        const form = document.getElementById('form'),
+          fieldset = document.getElementById('choices');
+        const boxes = [...fieldset.querySelectorAll('input')],
+          all = document.getElementById('all'),
+          clear = document.getElementById('clear');
+        const next = document.getElementById('continue'),
+          status = document.getElementById('status'),
+          count = document.getElementById('count');
+        let ready = false,
+          busy = false,
+          done = false,
+          id = 0;
+        const pending = new Map();
+        const selected = () =>
+          boxes.filter((box) => box.checked).map((box) => box.value);
+        const render = () => {
+          count.textContent = `${selected().length} of 6 selected`;
+          next.disabled = !ready || busy || done || !selected().length;
+          fieldset.disabled = busy || done;
+          all.disabled = clear.disabled = busy || done;
+        };
+        const notify = (method, params) =>
+          window.parent.postMessage({ jsonrpc: '2.0', method, params }, '*');
+        const rpc = (method, params) =>
+          new Promise((resolve, reject) => {
+            const key = ++id;
+            const timer = setTimeout(() => {
+              pending.delete(key);
+              reject(new Error('Host did not respond'));
+            }, 15000);
+            pending.set(key, { resolve, reject, timer });
+            window.parent.postMessage(
+              { jsonrpc: '2.0', id: key, method, params },
+              '*',
+            );
+          });
+        window.addEventListener('message', (event) => {
+          if (event.source !== window.parent) return;
+          const message = event.data;
+          if (!message || message.jsonrpc !== '2.0') return;
+          const request = pending.get(message.id);
+          if (!request) return;
+          clearTimeout(request.timer);
+          pending.delete(message.id);
+          if (message.error)
+            request.reject(new Error('Host rejected the request'));
+          else request.resolve(message.result);
+        });
+        all.addEventListener('click', () => {
+          boxes.forEach((box) => (box.checked = true));
+          render();
+        });
+        clear.addEventListener('click', () => {
+          boxes.forEach((box) => (box.checked = false));
+          render();
+        });
+        fieldset.addEventListener('change', render);
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          if (next.disabled) return;
+          busy = true;
+          render();
+          status.textContent = 'Confirming your choices…';
+          try {
+            const categories = selected();
+            const response = await rpc('tools/call', {
+              name: 'confirm_migration_categories',
+              arguments: { categories },
+            });
+            if (
+              response?.isError ||
+              !Array.isArray(response?.structuredContent?.categories) ||
+              JSON.stringify(response.structuredContent.categories) !==
+                JSON.stringify(categories)
+            )
+              throw new Error('Selection was not confirmed');
+            const sent = await rpc('ui/message', {
+              role: 'user',
+              content: [
+                {
+                  type: 'text',
+                  text: `Migration category selection confirmed: ${categories.join(', ')}. Continue the migration questionnaire using only these categories. Do not collect data until the required source information is supplied.`,
+                },
+              ],
+            });
+            if (sent?.isError) throw new Error('Message was not delivered');
+            done = true;
+            status.textContent =
+              'Choices sent. Continue with the next question in chat.';
+            next.textContent = 'Submitted';
+          } catch {
+            status.textContent =
+              'Could not send your choices. They are still selected; click Continue to retry.';
+          } finally {
+            busy = false;
+            render();
+          }
+        });
+        (async () => {
+          try {
+            if (window.parent === window) throw new Error('Not embedded');
+            await rpc('ui/initialize', {
+              appInfo: { name: 'migration-categories', version: '0.1.2' },
+              appCapabilities: {},
+              protocolVersion: '2026-01-26',
+            });
+            notify('ui/notifications/initialized', {});
+            ready = true;
+            status.textContent = 'Choose any combination, then continue.';
+            render();
+            notify('ui/notifications/size-changed', {
+              height: document.documentElement.scrollHeight,
+            });
+          } catch {
+            status.textContent =
+              'Open this questionnaire through the migration plugin in ChatGPT. The embedded connection is unavailable.';
+            render();
+          }
+        })();
+      })();
+    </script>
+  </body>
+</html>

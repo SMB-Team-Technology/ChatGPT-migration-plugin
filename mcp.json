@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "migration-questionnaire": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/scripts/questionnaire-server.mjs"],
+      "cwd": "${PLUGIN_ROOT}"
+    }
+  }
+}

@@ -10,7 +10,7 @@ Prepare selected ChatGPT data for a future **AI Workforce Pro (AIWP)** importer.
 - Explicit ChatGPT conversation JSON, ZIP, or extracted-directory inputs, with graph-aware normalization.
 - Optional exact staged records for projects, conversations, memories, skills, scheduled tasks, and artifacts.
 - Selection, credential-pattern exclusions, coverage reporting, and local bundle creation.
-- A portable plugin manifest, local marketplace catalog, and migration skill for the proposed ChatGPT Work desktop runtime.
+- A portable plugin manifest, local marketplace catalog, migration skill, and embedded six-checkbox category form served by a local MCP stdio process.
 
 There is no account-wide harvesting, hosted service, automatic browser download, or API-key requirement. The helper uses files you identify. It does not upload the bundle. Local execution does not establish that the surrounding ChatGPT conversation stays exclusively on the device.
 
@@ -100,3 +100,13 @@ Documentation consulted on 2026-10-28:
 - [Porting a Claude plugin](https://developers.openai.com/plugins/guides/submit-claude-plugin)
 - [ChatGPT Work execution boundaries](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-overview)
 - [Workspace import and sync](https://learn.chatgpt.com/docs/enterprise/plugin-management)
+
+## Category questionnaire (0.1.2)
+
+Selecting the migration skill calls `choose_migration_categories` from the packaged `migration-questionnaire` MCP server. Root `mcp.json` launches Node with `${PLUGIN_ROOT}`; no dependency installation, API key, listening port, or remote server is required. The form shows all six categories independently with Select all, Clear, and Continue. Nothing is selected initially. Continue validates a nonempty category list and sends the chosen IDs back to the chat for the remaining questions. The form never reads exports or starts collection.
+
+The server has only two questionnaire tools and one fixed UI resource; it keeps no cross-chat selection state. The UI uses the MCP Apps bridge, with timeouts and retryable errors. Real ChatGPT rendering and continuation still require the installed runtime check; SDK interoperability and simulated host tests are not a substitute. If the tool is missing, onboarding reports that limitation rather than reverting to the rejected single-choice category menu.
+
+For Git marketplace installs, refresh the marketplace, update/reinstall the plugin, and open a fresh local Work chat. Confirm both the version (0.1.2) and questionnaire tool discovery. This does not implement the backlogged web deployment.
+
+Implementation references: [MCP Apps UI](https://developers.openai.com/plugins/build/chatgpt-ui), [local MCP packaging](https://developers.openai.com/plugins/deploy/desktop-only), and [MCP stdio transport](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports).

@@ -49,3 +49,9 @@ This comparison diagnoses helper issues separately from installed-runtime issues
 Missing local execution, missing helper resources, an inaccessible output, unavailable Node, or a cached wrong version are failed runtime checks. Explain the specific missing capability and fix the packaging/environment before processing real data. Do not switch to a hosted service or request broad account permissions to conceal the failure.
 
 The final rehearsal report should distinguish **package discovery**, **helper execution**, **file correctness**, **account export coverage**, and **AIWP import**. Only mark what was actually exercised.
+
+## Checkbox questionnaire acceptance (0.1.2)
+
+In a fresh local Work chat, select the installed migration skill without a written prompt. Confirm a form with six visible checkboxes, Select all, Clear, and Continue appears. Initially nothing is checked and Continue is disabled. Select Chats and Scheduled tasks; verify both remain checked, Continue sends exactly `conversations,scheduledTasks`, and the next question asks where ChatGPT is used without asking categories again. In separate fresh chats test Select all, Clear, and a single category. Confirm no source file is read on selection. Confirm keyboard focus, checkbox toggling, narrow-window layout, and light/dark appearance.
+
+If the MCP tool or widget fails to load, capture the specific error and installed version; do not replace the form with a single-choice question. This form needs the packaged local MCP process, not just the skill file. Later choose Try the sample first for the synthetic converter rehearsal; this explicitly scopes that rehearsal to conversations only.

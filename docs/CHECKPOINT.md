@@ -1,6 +1,6 @@
 # Local review checkpoint — 2026-10-28
 
-Version: 0.1.1 (guided onboarding update; converter review below covered 0.1.0). The initial reviews covered an uncommitted local Git repository on `main`. The accepted source is now being committed for private repository publication; no remote publication has been verified. Review the full source tree rather than relying on an empty working-tree diff.
+Version: 0.1.2 (embedded category form; earlier converter review covered 0.1.0). The initial reviews covered an uncommitted local Git repository on `main`. The accepted source is now being committed for private repository publication; no remote publication has been verified. Review the full source tree rather than relying on an empty working-tree diff.
 
 ## Implemented
 
@@ -72,3 +72,11 @@ Reopen converter review for new changes or concrete failures, rather than repeat
 Audited the reference Claude skill: category multi-selection, web/desktop/both source context, and all/choose/none item selection are instruction-driven, with the host providing question UI. The ChatGPT skill now explicitly requests native choice tools, starts on selection without a custom prompt, and adapts multi-selection to single-select hosts. Source/account/export questions are progressive; unsupported category collection and pending AIWP import remain explicit. No Claude collectors were copied.
 
 Installed UI acceptance remains pending: refresh/reinstall version 0.1.1, open a fresh chat, select migrate without additional text, and confirm native question cards appear. Check Chats only, Choose categories, and Try the sample first; verify answers carry forward and no private source is read before selection. If native choice tools are unavailable, the skill discloses this and uses one short question at a time. This is not a custom embedded form or proof of identical Claude checkbox rendering.
+
+## Embedded multi-select implementation — 0.1.2
+
+Replaced the single-choice category fallback with an MCP Apps checkbox form. Added root `mcp.json`, a bounded dependency-free stdio server, and a self-contained HTML resource. The skill opens the form and consumes its submitted category IDs before continuing. Six categories, Select all, Clear, nonempty Continue, retryable errors, no source reads, and no persisted cross-chat state are implemented. Other single-choice onboarding questions remain native.
+
+Validation: seven new tests cover all 63 nonempty subsets, invalid/duplicate input, no initial selection, all/clear/subset UI behavior, validation/message failure retention, unknown tools/resources, and protocol initialization. The existing SDK 1.29.0 client successfully initialized, discovered both tools, confirmed a subset, and read the UI resource from an unrelated working directory. UI event tests use a simulated DOM/host. Browser rendering could not be exercised: the bundled test browser was absent and the installed browser could not launch in this session. Native ChatGPT rendering, permissions, and automatic continuation remain pending the runtime acceptance check. No personal export or destination import was used.
+
+Full suite after the 0.1.2 implementation: **75 passed, 0 failed** on Node 24.22.1. The seven questionnaire tests also pass after formatting.

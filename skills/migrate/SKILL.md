@@ -5,7 +5,7 @@ description: Prepare a ChatGPT export and exact user-supplied records as a local
 
 # Prepare a ChatGPT migration
 
-This is a pilot. **Production AIWP acceptance is not implemented or verified by this package.** Do not instruct the user to upload its bundle to production, disguise it as Claude data, or use the regular conversation importer as an automatic fallback.
+This is a desktop pilot. AIWP ChatGPT import support has merged and passed a synthetic rehearsal; this helper does not check the destination deployment or verify the user's bundle there. Before guiding import, confirm the intended AIWP account has the ChatGPT importer deployed and its administrator has confirmed MongoDB transaction support. Never disguise the bundle as Claude data or use the regular conversation importer as an automatic fallback.
 
 ## Establish runtime and scope
 
@@ -26,7 +26,7 @@ Ask only unanswered questions, in this order:
 3. **“Which account or workspace is this export from?”** Choices: **Personal account**, **Work/team workspace**. Ask for a distinguishing workspace label only if needed to keep supplied sources separate; never ask for passwords or API keys. Skip during a synthetic rehearsal.
 4. **“Do you already have your ChatGPT export?”** Choices: **Yes, ready**, **Not yet**, **Try the sample first**. If Yes, ask for the single export through an available attachment/file picker or its exact local path; do not pretend a file picker exists if it does not. If Not yet, give verified current export instructions or explain that they need to obtain their export before collection. If sample, use the installed synthetic fixture, conversations only, without reading account data. Do not replace an explicitly requested synthetic rehearsal with these onboarding questions.
 
-Projects contain supplied instructions/text context, not automatic project-file collection. Memories require exact saved entries. Skills require authorized exact instructions/resources, not hidden GPT instructions. Scheduled tasks require exact schedules and remain paused. Artifacts require actual content; Canvas content is not reconstructed from export tool calls. Reveal these details when the corresponding category is chosen, rather than opening with a technical disclaimer wall. State once that this pilot prepares a bundle and AIWP import support is still pending.
+Projects contain supplied instructions/text context, not automatic project-file collection. Memories require exact saved entries. Skills require authorized exact instructions/resources, not hidden GPT instructions. Scheduled tasks require exact schedules and remain paused. Artifacts require actual content; Canvas content is not reconstructed from export tool calls. Reveal these details when the corresponding category is chosen, rather than opening with a technical disclaimer wall. State once that this pilot prepares a local bundle for AIWP's Import from ChatGPT flow; destination support and successful import must be verified separately.
 
 Wait for each required answer before dependent collection. Defaults are suggestions, not consent. When the host has no native choice tool, disclose that limitation and ask one short numbered question at a time; do not claim text bullets are clickable. The category question uses the packaged MCP Apps form; subsequent single-choice questions use the native question tool. Category selection grants no permission to read unspecified files or upload data.
 
@@ -60,4 +60,4 @@ Build with the same explicit sources and requested categories into a new file ou
 
 The helper writes a local bundle; it does not upload data. The surrounding ChatGPT session may still process context in the service even when the helper runs locally.
 
-Finish this pilot with the local bundle and validation result plus the remaining requirement: a compatible AIWP test importer. Keep originals until destination verification. Do not claim successful migration, installed-runtime verification, full account coverage, or production readiness from CLI validation alone.
+Finish with the local bundle, validation result, and coverage summary. If destination prerequisites are confirmed, guide the user through Settings → Data controls → Import from ChatGPT, preview, selection, and results. Import only after the user approves the destination and selected data. If support is missing or unconfirmed, stop at the local bundle. Verify representative imported items and keep originals until destination verification. Do not claim successful migration, installed-runtime verification, full account coverage, or production readiness from CLI validation alone.

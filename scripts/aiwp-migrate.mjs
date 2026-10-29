@@ -19,7 +19,7 @@ Usage:
 
 An explicit --inputs folder can replace --export. Keys come from scan; comma-separate lists.
 Categories: ${CATEGORIES.join(', ')}
-PILOT: validation is local only. AIWP compatibility and ChatGPT installation are not yet verified.`;
+PILOT: validation is local only. This helper does not verify the destination deployment or installed ChatGPT runtime.`;
 const optionTypes = {
   export: { type: 'string' }, inputs: { type: 'string' }, out: { type: 'string' },
   categories: { type: 'string' }, exclude: { type: 'string' }, 'allow-flagged': { type: 'string' },
@@ -121,7 +121,7 @@ async function main() {
   const bundle = makeBundle(chosen, [...report.warnings, ...selectionWarnings]);
   const file = await writeBundle(values.out, bundle);
   print({ file, counts: counts(bundle), skipped, coverage: report,
-    status: 'Pilot bundle created. Do not import into production AIWP; matching importer support is pending.' });
+    status: 'Bundle created. Use AIWP Import from ChatGPT on a compatible deployment. Review the preview before import; destination acceptance is not verified by this helper.' });
 }
 
 main().catch((error) => {

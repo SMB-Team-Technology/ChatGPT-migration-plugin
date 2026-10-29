@@ -1,8 +1,8 @@
 # ChatGPT migration plugin — local pilot
 
-Prepare selected ChatGPT data for a future **AI Workforce Pro (AIWP)** importer. The workflow follows the Claude migration plugin: choose categories, collect exact inputs, review coverage, select items, and build one bundle.
+Prepare selected ChatGPT data for the **AI Workforce Pro (AIWP)** ChatGPT importer. The workflow follows the Claude migration plugin: choose categories, collect exact inputs, review coverage, select items, and build one bundle.
 
-**This is a local development pilot. The inspected AIWP importer accepts Claude bundles; support for this ChatGPT format has not been implemented or verified in this milestone. Do not upload a generated bundle to production or relabel it as a Claude bundle.** A desktop sample run has been reported; full questionnaire acceptance and real-export compatibility remain pending. See the [current checkpoint](docs/CHECKPOINT.md) for evidence and the [runtime protocol](docs/runtime-test.md) for remaining checks.
+**This is a desktop pilot. AIWP ChatGPT bundle import support has merged in PR #1075 and passed a synthetic local import rehearsal.** Use a destination with that change deployed and MongoDB transaction support. A real current export, complete installed questionnaire acceptance, and external-client installation remain unverified. Do not relabel the bundle as Claude data. See the [current checkpoint](docs/CHECKPOINT.md) for evidence and the [runtime protocol](docs/runtime-test.md) for remaining checks.
 
 ## What is implemented
 
@@ -82,7 +82,7 @@ For the team repository, add this source in the Plugins Directory marketplace di
 - Git ref: `main`
 - Sparse paths: leave blank
 
-Repository access is required. Alternatively, register it from Terminal:
+The repository must be accessible to the installing account; public visibility removes the GitHub access invitation requirement. Alternatively, register it from Terminal:
 
 ```sh
 codex plugin marketplace add https://github.com/SMB-Team-Technology/ChatGPT-migration-plugin.git
@@ -102,11 +102,21 @@ Then update/reinstall the plugin and start a fresh chat. This upgrade command do
 
 If `choose_migration_categories` is missing, check the installed version, whether the local MCP process is available, and root `mcp.json`. That file must declare its schema. A successful helper `doctor` does not verify MCP discovery or widget rendering. Do not repeatedly reinstall without checking the failure.
 
-Team workspace distribution and external-client installation need separate verification. Access to this private repository does not grant access to every client.
+Team workspace distribution and external-client installation need separate verification. GitHub visibility does not grant ChatGPT workspace permissions or publish a listing in the official plugin directory. This package runs locally; it does not provide the backlogged web experience.
+
+## Import into AIWP
+
+1. Keep the original export and review the helper's included, omitted, and quarantined item counts.
+2. Confirm with the AIWP administrator that ChatGPT import is deployed and the database supports transactions.
+3. In the intended AIWP account, open **Settings → Data controls → Import from ChatGPT** and select the generated bundle JSON. Do not use **Import from Claude** or the generic conversation importer.
+4. Review the preview and selected items before confirming import. If the ChatGPT action is missing or the bundle is rejected, stop and check destination support.
+5. Read the results and open representative imported items. Verify message content, the selected branch, links, and paused tasks before considering the migration complete. Keep originals until verification is finished.
+
+Attachments, original project files, integrations, and skill supporting files require separate handling. Alternate chat branches are retained, but the existing AIWP branch-switching UI remains disabled. The helper never uploads data itself.
 
 ## Development and release scope
 
-Read [the implementation plan](docs/PLAN.md) for pending AIWP import, identity, retry, deployment, and distribution work. A distinct `chatgpt-migration-bundle` requires corresponding AIWP support.
+Read [the implementation plan](docs/PLAN.md) for remaining export, runtime, and distribution checks. AIWP support merged in [PR #1075](https://github.com/SMB-Team-Technology/AI-Workforce-Pro/pull/1075); that implementation repository may require team access. Use a deployment containing merge commit `8d4c7ff2ae3e7db78827238df40f973ad279424e` or its equivalent changes. There is no automatic destination capability check in this helper.
 
 Derived from [SMB Team Technology's Claude migration plugin](https://github.com/SMB-Team-Technology/Claude-migration-plugin), version **0.7.0**, commit **79158a0ded70f654468dc0c68b5a110bb534b788**. The original MIT [license](LICENSE) is preserved; the reference repository is unchanged.
 
@@ -142,6 +152,6 @@ Implementation references: [MCP Apps UI](https://developers.openai.com/plugins/b
 | `test/` | Synthetic tests; no customer exports |
 | [Bundle contract](docs/bundle-format.md) | Schema, staging examples, limits |
 | [Checkpoint](docs/CHECKPOINT.md) / [review history](docs/review-history.md) | Current evidence / historical reviews |
-| [Plan](docs/PLAN.md) | Remaining plugin work, web backlog, future AIWP integration |
+| [Plan](docs/PLAN.md) | Remaining plugin work, web backlog, destination verification |
 
 Before shipping a changed package, keep `package.json` and `plugin.json` versions aligned, run `npm test`, and complete the relevant installed-runtime checks. Runtime version reporting follows `package.json`. Keep private exports outside this repository.

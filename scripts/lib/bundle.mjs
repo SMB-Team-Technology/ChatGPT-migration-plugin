@@ -152,7 +152,7 @@ export function coverage(collected, { showTitles = false } = {}) {
       omitted: item.omitted,
     })),
     warnings: [
-      'PILOT: Matching AIWP importer support is outside this milestone and has not been verified. Do not upload this bundle to production.',
+      'Requires a compatible AIWP ChatGPT importer with MongoDB transaction support. This bundle has not been verified at its destination.',
       'Only explicitly supplied data was inspected; zero items does not establish an empty account.',
       'Attachments, project files, connectors, and source access permissions are not transferred.',
       'Credential detection is best-effort. Review selected content before sharing the bundle.',

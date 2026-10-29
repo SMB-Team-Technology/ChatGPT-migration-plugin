@@ -1,5 +1,6 @@
 # Review history
 
+Historical record: implementation status below describes each review at the time. See [CHECKPOINT.md](CHECKPOINT.md) for current AIWP importer support and remaining gaps.
 Historical evidence and decisions from development on 2026-10-28. Version-specific instructions below are archival, not current setup instructions. See [CHECKPOINT.md](CHECKPOINT.md) for current status.
 
 ## Implemented

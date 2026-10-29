@@ -1,6 +1,6 @@
 # ChatGPT migration pilot contract (v1)
 
-**This is a proposed ChatGPT contract implemented by the local helper, not a format accepted by the current AIWP server.** Keep it distinct from the Claude bundle. Validation here establishes structural consistency only.
+**This v1 contract is implemented by the local helper and the AIWP ChatGPT importer merged in PR #1075.** A destination must have that support deployed; local validation does not check deployment or database transaction support. Keep it distinct from the Claude bundle. Validation here establishes structural consistency only.
 
 The validator in `scripts/lib/validate.mjs` is the local authority. Unknown fields are rejected rather than silently discarded.
 
@@ -11,7 +11,7 @@ The validator in `scripts/lib/validate.mjs` is the local authority. Unknown fiel
   "format": "chatgpt-migration-bundle",
   "version": 1,
   "createdAt": "2026-10-28T12:00:00.000Z",
-  "generator": { "name": "chatgpt-migration-plugin", "version": "0.1.4" },
+  "generator": { "name": "chatgpt-migration-plugin", "version": "0.1.5" },
   "migrationWarnings": ["Destination import has not been verified."],
   "conversations": [
     {
@@ -107,7 +107,7 @@ The complete serialized bundle is limited to **25 MiB**. Limits reject oversized
 | Skill supporting files | 50; path up to 500 characters |
 | Bundle warnings | 1,000; each up to 2,000 characters |
 
-These bounds are the pilot contract, not a promise about every destination deployment. The future importer must validate its own limits and graph semantics.
+These bounds are the pilot contract, not a promise about every destination deployment. The destination importer validates its own limits and graph semantics.
 
 ## Local output
 
@@ -115,4 +115,4 @@ Output uses a private temporary file and refuses to overwrite existing files or 
 
 ## Compatibility and changes
 
-Keep source IDs in the file for graph and relationship mapping; derive destination identities on the server with source/provider and owner isolation. Never put destination user or tenant authorization into the bundle. Future fields require an explicit validator change and tests. Breaking changes require a new version. Preserve Claude v1 acceptance in the future AIWP implementation.
+Keep source IDs in the file for graph and relationship mapping; derive destination identities on the server with source/provider and owner isolation. Never put destination user or tenant authorization into the bundle. Future fields require an explicit validator change and tests. Breaking changes require a new version. Preserve existing Claude v1 acceptance in subsequent AIWP changes.
